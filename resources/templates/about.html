@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Курс валют</title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body>
+
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page cv-page mt-5">
+    <section class="portfolio-block cv">
+        <div class="container">
+            <div class="work-experience group">
+                <h2 class="text-center">Курс валют</h2>
+            </div>
+            <div class="row">
+                <div class="col-12 my-3 text-center"><p class="lead">Курс</p></div>
+                <div class="col-3 text-center">
+                    <p class="lead text-primary">1 BYN к</p>
+                    <p th:text="${'USD: ' + setting.BYNtoUSD}"></p>
+                    <p th:text="${'EUR: ' + setting.BYNtoEUR}"></p>
+                    <p th:text="${'RUB: ' + setting.BYNtoRUB}"></p>
+                </div>
+                <div class="col-3 text-center">
+                    <p class="lead text-success">1 USD к</p>
+                    <p th:text="${'BYN: ' + setting.USDtoBYN}"></p>
+                    <p th:text="${'EUR: ' + setting.USDtoEUR}"></p>
+                    <p th:text="${'RUB: ' + setting.USDtoRUB}"></p>
+                </div>
+                <div class="col-3 text-center">
+                    <p class="lead text-warning">1 EUR к</p>
+                    <p th:text="${'BYN: ' + setting.EURtoBYN}"></p>
+                    <p th:text="${'USD: ' + setting.EURtoUSD}"></p>
+                    <p th:text="${'RUB: ' + setting.EURtoRUB}"></p>
+                </div>
+                <div class="col-3 text-center">
+                    <p class="lead text-danger">1 RUB к</p>
+                    <p th:text="${'BYN: ' + setting.RUBtoBYN}"></p>
+                    <p th:text="${'USD: ' + setting.RUBtoUSD}"></p>
+                    <p th:text="${'EUR: ' + setting.RUBtoEUR}"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:insert="blocks/scripts :: scripts"></div>
+
+</body>
+
+</html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title th:text="${atm.name}"></title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body>
+
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page project-page mt-3">
+    <section class="portfolio-block project">
+        <div class="container">
+            <div class="heading">
+                <h2 th:text="${atm.name}"></h2>
+            </div>
+            <div th:if="${message}" class="d-xl-flex justify-content-xl-center"
+                 style="margin-top: 50px;padding-bottom: 20px;">
+                <div class="alert alert-warning text-center" role="alert" style="width: 650px;margin-bottom: 0">
+                    <span><strong th:text="${message}"></strong></span>
+                </div>
+            </div>
+            <div class="row mb-4">
+                <div class="col-3">
+                    <img th:src="'/img/' + ${atm.file}" width="100%" class="rounded-5">
+                </div>
+                <div class="col">
+                    <form th:action="'/histories/add/' + ${atm.id}" method="post"
+                          th:if="${role == 'USER' and !user.cards.isEmpty() and atm.status}">
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <select name="cardId" class="form-select" required>
+                                    <option th:each="card : ${user.cards}" th:value="${card.id}" th:if="${card.status}"
+                                            th:label="${card.name + ' - ' + card.number}"></option>
+                                </select>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <input class="form-control" type="password" pattern="[0-9]{4,4}" minlength="4"
+                                       maxlength="4" name="pin" placeholder="Пин-код" required>
+                            </div>
+                            <div class="col-6 mb-3">
+                                <input class="form-control" type="password" pattern="[0-9]{3,3}" minlength="3"
+                                       maxlength="3" name="cvv" placeholder="CVV" required>
+                            </div>
+                            <div class="col-auto">
+                                <select name="currency" id="currency" class="form-select" required>
+                                    <option value="BYN" th:if="${atm.BYN > 0}">BYN</option>
+                                    <option value="USD" th:if="${atm.USD > 0}">USD</option>
+                                    <option value="EUR" th:if="${atm.EUR > 0}">EUR</option>
+                                    <option value="RUB" th:if="${atm.RUB > 0}">RUB</option>
+                                </select>
+                            </div>
+                            <div class="col" id="BYN">
+                                <input class="form-control" type="number" min="5" step="5" max="100000" name="moneyBYN">
+                            </div>
+                            <div class="col" id="OTHER">
+                                <input class="form-control" type="number" min="100" step="100" max="100000"
+                                       name="moneyOther">
+                            </div>
+                            <div class="col-auto">
+                                <button class="btn btn-primary" type="submit">Снять</button>
+                            </div>
+                        </div>
+                    </form>
+                    <div th:if="${role == 'MANAGER'}" class="mb-3">
+                        <div class="row">
+                            <div class="col">
+                                <a th:href="'/ATMs/edit/' + ${atm.id}" class="btn btn-primary">Изменить</a>
+                                <a th:href="'/ATMs/delete/' + ${atm.id}" class="btn btn-danger mx-2">Удалить</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="row">
+                            <div class="col">
+                                <a th:if="${role == 'MANAGER'}" th:href="${'/ATMs/' + atm.id + '/status'}">
+                                    <span class="text-success" th:if="${atm.status}">Активен</span>
+                                    <span class="text-danger" th:unless="${atm.status}">Неактивен</span>
+                                </a>
+                                <br>
+                                <span th:text="${'Комиссия: ' + atm.com + '%'}"></span>
+                                <br th:if="${atm.BYN > 0}">
+                                <span class="text-primary" th:if="${atm.BYN > 0}" th:text="${'BYN: ' + atm.BYN}"></span>
+                                <br th:if="${atm.USD > 0}">
+                                <span class="text-success" th:if="${atm.USD > 0}" th:text="${'USD: ' + atm.USD}"></span>
+                                <br th:if="${atm.EUR > 0}">
+                                <span class="text-warning" th:if="${atm.EUR > 0}" th:text="${'EUR: ' + atm.EUR}"></span>
+                                <br th:if="${atm.RUB > 0}">
+                                <span class="text-danger" th:if="${atm.RUB > 0}" th:text="${'RUB: ' + atm.RUB}"></span>
+                                <br>
+                                <span th:text="${'Количество транзакций: ' + atm.getTransactions}"></span>
+                                <br>
+                                <span th:text="${'Адрес: ' + atm.getAddress}"></span>
+                                <br>
+                                <span th:text="${'Серийный номер: ' + atm.getSerial}"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${role == 'MANAGER' and atm.status}">
+                <hr>
+                <div class="row">
+                    <div class="col-6 mb-4">
+                        <form th:action="${'/ATMs/' + atm.id + '/BYN'}" method="post">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="number" min="5" step="5" max="100000" class="form-control" name="BYN"
+                                           required>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-info">Добавить BYN</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <form th:action="${'/ATMs/' + atm.id + '/USD'}" method="post">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="number" min="100" step="100" max="100000" class="form-control"
+                                           name="USD"
+                                           required>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-info">Добавить USD</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <form th:action="${'/ATMs/' + atm.id + '/EUR'}" method="post">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="number" min="100" step="100" max="100000" class="form-control"
+                                           name="EUR"
+                                           required>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-info">Добавить EUR</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-6 mb-4">
+                        <form th:action="${'/ATMs/' + atm.id + '/RUB'}" method="post">
+                            <div class="row">
+                                <div class="col">
+                                    <input type="number" min="100" step="100" max="100000" class="form-control"
+                                           name="RUB"
+                                           required>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-info">Добавить RUB</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="col text-center"><p class="lead">Пользователь</p></div>
+                    <div class="col text-center"><p class="lead">Дата</p></div>
+                    <div class="col text-center"><p class="lead">Сумма</p></div>
+                    <div class="col text-center"><p class="lead">Валюта</p></div>
+                </div>
+                <div class="row" th:each="h : ${atm.histories}">
+                    <div class="col text-center"><p th:text="${h.owner.username}"></p></div>
+                    <div class="col text-center"><p th:text="${h.date}"></p></div>
+                    <div class="col text-center"><p th:text="${h.sum}"></p></div>
+                    <div class="col text-center"><p th:text="${h.card.currency.name}"></p></div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:insert="blocks/scripts :: scripts"></div>
+
+<script type="text/javascript">
+    let currency = document.getElementById('currency');
+    let BYN = document.getElementById('BYN');
+    let OTHER = document.getElementById('OTHER');
+
+    BYN.style.display = 'block';
+    OTHER.style.display = 'none';
+
+    currency.addEventListener('change', function () {
+        if (currency.selectedIndex === 0) {
+            BYN.style.display = 'block';
+            OTHER.style.display = 'none';
+        } else {
+            BYN.style.display = 'none';
+            OTHER.style.display = 'block';
+        }
+    });
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Настройки</title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body>
+
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page project-page mt-3">
+    <section class="portfolio-block project">
+        <div class="container">
+            <div class="heading">
+                <h2>Настройки</h2>
+            </div>
+            <div class="row">
+                <div class="col-12 text-center">
+                    <p class="lead">Лимит снятия</p>
+                </div>
+                <div class="col-3"></div>
+                <div class="col text-center text-primary" th:text="${'BYN: ' + setting.limitBYN}"></div>
+                <div class="col text-center text-success" th:text="${'USD: ' + setting.limitUSD}"></div>
+                <div class="col text-center text-warning" th:text="${'EUR: ' + setting.limitEUR}"></div>
+                <div class="col text-center text-danger" th:text="${'RUB: ' + setting.limitRUB}"></div>
+                <div class="col-3"></div>
+            </div>
+            <form action="/settings/limit" method="post" class="rounded-5 mt-3">
+                <div class="row">
+                    <div class="col-auto">
+                        <select name="currency" class="form-select" required id="currency">
+                            <option th:each="cur : ${currency}" th:value="${cur}" th:label="${cur.name}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="number" min="5" step="5" max="10000" class="form-control" name="BYN" id="BYN"
+                               required th:value="${setting.limitBYN}" placeholder="BYN">
+                        <input type="number" min="100" step="100" max="10000" class="form-control" name="USD" id="USD"
+                               required th:value="${setting.limitUSD}" placeholder="USD">
+                        <input type="number" min="100" step="100" max="10000" class="form-control" name="EUR" id="EUR"
+                               required th:value="${setting.limitEUR}" placeholder="EUR">
+                        <input type="number" min="100" step="100" max="50000" class="form-control" name="RUB" id="RUB"
+                               required th:value="${setting.limitRUB}" placeholder="RUB">
+                    </div>
+                    <div class="col-auto">
+                        <button class="btn btn-info" type="submit">Обновить</button>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="col-12 my-3 text-center"><p class="lead">Курс</p></div>
+                <div class="col-3">
+                    <p class="lead text-primary">BYN к</p>
+                    <p th:text="${'USD: ' + setting.BYNtoUSD}"></p>
+                    <p th:text="${'EUR: ' + setting.BYNtoEUR}"></p>
+                    <p th:text="${'RUB: ' + setting.BYNtoRUB}"></p>
+                    <form action="/settings/BYNto" class="rounded-5" method="post">
+                        <div class="row">
+                            <div class="col-auto">
+                                <select name="currency" class="form-select" required id="BYNto">
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="RUB">RUB</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="USD"
+                                       id="BYNtoUSD" required th:value="${setting.BYNtoUSD}" placeholder="USD">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="EUR"
+                                       id="BYNtoEUR" required th:value="${setting.BYNtoEUR}" placeholder="EUR">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="RUB"
+                                       id="BYNtoRUB" required th:value="${setting.BYNtoRUB}" placeholder="RUB">
+                            </div>
+                            <div class="col-12 mt-2">
+                                <button class="btn btn-info w-100" type="submit">Обновить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-3">
+                    <p class="lead text-success">USD к</p>
+                    <p th:text="${'BYN: ' + setting.USDtoBYN}"></p>
+                    <p th:text="${'EUR: ' + setting.USDtoEUR}"></p>
+                    <p th:text="${'RUB: ' + setting.USDtoRUB}"></p>
+                    <form action="/settings/USDto" class="rounded-5" method="post">
+                        <div class="row">
+                            <div class="col-auto">
+                                <select name="currency" class="form-select" required id="USDto">
+                                    <option value="BYN">BYN</option>
+                                    <option value="EUR">EUR</option>
+                                    <option value="RUB">RUB</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="BYN"
+                                       id="USDtoBYN" required th:value="${setting.USDtoBYN}" placeholder="BYN">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="EUR"
+                                       id="USDtoEUR" required th:value="${setting.USDtoEUR}" placeholder="EUR">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="RUB"
+                                       id="USDtoRUB" required th:value="${setting.USDtoRUB}" placeholder="RUB">
+                            </div>
+                            <div class="col-12 mt-2">
+                                <button class="btn btn-info w-100" type="submit">Обновить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-3">
+                    <p class="lead text-warning">EUR к</p>
+                    <p th:text="${'BYN: ' + setting.EURtoBYN}"></p>
+                    <p th:text="${'USD: ' + setting.EURtoUSD}"></p>
+                    <p th:text="${'RUB: ' + setting.EURtoRUB}"></p>
+                    <form action="/settings/EURto" class="rounded-5" method="post">
+                        <div class="row">
+                            <div class="col-auto">
+                                <select name="currency" class="form-select" required id="EURto">
+                                    <option value="BYN">BYN</option>
+                                    <option value="USD">USD</option>
+                                    <option value="RUB">RUB</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="BYN"
+                                       id="EURtoBYN" required th:value="${setting.EURtoBYN}" placeholder="BYN">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="USD"
+                                       id="EURtoUSD" required th:value="${setting.EURtoUSD}" placeholder="USD">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="RUB"
+                                       id="EURtoRUB" required th:value="${setting.EURtoRUB}" placeholder="RUB">
+                            </div>
+                            <div class="col-12 mt-2">
+                                <button class="btn btn-info w-100" type="submit">Обновить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-3">
+                    <p class="lead text-danger">RUB к</p>
+                    <p th:text="${'BYN: ' + setting.RUBtoBYN}"></p>
+                    <p th:text="${'USD: ' + setting.RUBtoUSD}"></p>
+                    <p th:text="${'EUR: ' + setting.RUBtoEUR}"></p>
+                    <form action="/settings/RUBto" class="rounded-5" method="post">
+                        <div class="row">
+                            <div class="col-auto">
+                                <select name="currency" class="form-select" required id="RUBto">
+                                    <option value="BYN">BYN</option>
+                                    <option value="USD">USD</option>
+                                    <option value="EUR">EUR</option>
+                                </select>
+                            </div>
+                            <div class="col">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="BYN"
+                                       id="RUBtoBYN" required th:value="${setting.RUBtoBYN}" placeholder="BYN">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="USD"
+                                       id="RUBtoUSD" required th:value="${setting.RUBtoUSD}" placeholder="USD">
+                                <input type="number" min="0.01" step="0.01" max="1000" class="form-control" name="EUR"
+                                       id="RUBtoEUR" required th:value="${setting.RUBtoEUR}" placeholder="EUR">
+                            </div>
+                            <div class="col-12 mt-2">
+                                <button class="btn btn-info w-100" type="submit">Обновить</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:insert="blocks/scripts :: scripts"></div>
+
+<script type="text/javascript" src="/js/settings.js"></script>
+
+</body>
+
+</html>

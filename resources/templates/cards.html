@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Карточки</title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body>
+
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page project-page mt-3">
+    <section class="portfolio-block project">
+        <div class="container">
+            <div class="heading">
+                <h2>Карточки</h2>
+            </div>
+            <div class="text-center mb-5">
+                <a href="/cards/add" class="btn btn-primary w-50">Добавить</a>
+            </div>
+            <div class="row">
+                <div th:each="c : ${cards}" class="col-4">
+                    <form th:action="${'/cards/' + c.id + '/add'}" class="rounded-5" method="post">
+                        <p class="lead" th:text="${c.name}"></p>
+                        <a th:href="${'/cards/' + c.id + '/status'}">
+                            <span class="text-success" th:if="${c.status}">Активен</span>
+                            <span class="text-danger" th:unless="${c.status}">Неактивен</span>
+                        </a>
+                        <p th:text="${c.money + ' ' + c.currency.name}"></p>
+                        <p th:text="${c.number}"></p>
+                        <p th:text="${'Срок действия: ' + c.date}"></p>
+                        <p th:text="${c.fio}"></p>
+                        <input th:if="${c.status}" type="number" class="form-control mb-2" min="0.01" step="0.01" max="10000" name="money">
+                        <button th:if="${c.status}" type="submit" class="btn btn-info" >Пополнить</button>
+                        <a th:href="${'/cards/' + c.id + '/delete'}" class="btn btn-danger mx-2">Удалить</a>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+
+<div th:insert="blocks/scripts :: scripts"></div>
+
+</body>
+
+</html>

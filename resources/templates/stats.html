@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Статистика</title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body>
+
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page cv-page mt-5">
+    <section class="portfolio-block cv">
+        <div class="container">
+            <div class="work-experience group">
+                <h2 class="text-center">Статистика</h2>
+            </div>
+            <form action="/stats/filter" method="get">
+                <div class="row">
+                    <div class="col-auto">
+                        <a href="/stats" class="btn btn-secondary">Все</a>
+                    </div>
+                    <div class="col">
+                        <input type="date" name="date" class="form-control" required th:value="${date}">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Фильтр</button>
+                    </div>
+                </div>
+            </form>
+            <hr>
+            <div id="drawTransactions" class="w-100" style="height: 300px"></div>
+            <hr>
+            <div id="drawCurrencyTransactions" class="w-100" style="height: 300px"></div>
+            <hr>
+            <div id="drawCurrency" class="w-100" style="height: 300px"></div>
+            <hr>
+            <div id="drawCurrencyCom" class="w-100" style="height: 300px"></div>
+            <hr>
+            <div class="item">
+                <div class="row">
+                    <div class="col text-center">
+                        <p class="lead">Идентификатор банкомата</p>
+                    </div>
+                    <div class="col text-center">
+                        <p class="lead">Количество транзакций</p>
+                    </div>
+                    <div class="col text-center">
+                        <p class="lead">Снято BYN</p>
+                    </div>
+                    <div class="col text-center">
+                        <p class="lead">Комиссия BYN</p>
+                    </div>
+                    <div class="col text-center">
+                        <p class="lead">Снято USD</p>
+                    </div>
+                    <div class="col text-center">
+                        <p class="lead">Комиссия USD</p>
+                    </div>
+                    <div class="col text-center">
+                        <p class="lead">Снято EUR</p>
+                    </div>
+                    <div class="col text-center">
+                        <p class="lead">Комиссия EUR</p>
+                    </div>
+                    <div class="col text-center">
+                        <p class="lead">Снято RUB</p>
+                    </div>
+                    <div class="col text-center">
+                        <p class="lead">Комиссия RUB</p>
+                    </div>
+                </div>
+            </div>
+            <div class="item">
+                <div th:each="atm : ${atms}" class="row">
+                    <div class="col text-center"><span th:text="${atm.name}" class="fs-5"></span></div>
+                    <div class="col text-end">
+                        <span th:unless="${date}" th:text="${atm.transactions}" class="fs-5"></span>
+                        <span th:if="${date}" th:text="${atm.getTransactions(date)}" class="fs-5"></span>
+                    </div>
+                    <div class="col text-end">
+                        <span th:unless="${date}" th:text="${atm.getStatATMsSum('BYN','')}" class="fs-5"></span>
+                        <span th:if="${date}" th:text="${atm.getStatATMsSum('BYN',date)}" class="fs-5"></span>
+                    </div>
+                    <div class="col text-end">
+                        <span th:unless="${date}" th:text="${atm.getStatATMsCom('BYN','')}" class="fs-5"></span>
+                        <span th:if="${date}" th:text="${atm.getStatATMsCom('BYN',date)}" class="fs-5"></span>
+                    </div>
+                    <div class="col text-end">
+                        <span th:unless="${date}" th:text="${atm.getStatATMsSum('USD','')}" class="fs-5"></span>
+                        <span th:if="${date}" th:text="${atm.getStatATMsSum('USD',date)}" class="fs-5"></span>
+                    </div>
+                    <div class="col text-end">
+                        <span th:unless="${date}" th:text="${atm.getStatATMsCom('USD','')}" class="fs-5"></span>
+                        <span th:if="${date}" th:text="${atm.getStatATMsCom('USD',date)}" class="fs-5"></span>
+                    </div>
+                    <div class="col text-end">
+                        <span th:unless="${date}" th:text="${atm.getStatATMsSum('EUR','')}" class="fs-5"></span>
+                        <span th:if="${date}" th:text="${atm.getStatATMsSum('EUR',date)}" class="fs-5"></span>
+                    </div>
+                    <div class="col text-end">
+                        <span th:unless="${date}" th:text="${atm.getStatATMsCom('EUR','')}" class="fs-5"></span>
+                        <span th:if="${date}" th:text="${atm.getStatATMsCom('EUR',date)}" class="fs-5"></span>
+                    </div>
+                    <div class="col text-end">
+                        <span th:unless="${date}" th:text="${atm.getStatATMsSum('RUB','')}" class="fs-5"></span>
+                        <span th:if="${date}" th:text="${atm.getStatATMsSum('RUB',date)}" class="fs-5"></span>
+                    </div>
+                    <div class="col text-end">
+                        <span th:unless="${date}" th:text="${atm.getStatATMsCom('RUB','')}" class="fs-5"></span>
+                        <span th:if="${date}" th:text="${atm.getStatATMsCom('RUB',date)}" class="fs-5"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<div th:insert="blocks/scripts :: scripts"></div>
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script th:inline="javascript" type="text/javascript">
+    var stringTransactions = /*[[${stringTransactions}]]*/ [];
+    var intTransactions = /*[[${intTransactions}]]*/ [];
+    var stringCurrency = /*[[${stringCurrency}]]*/ [];
+    var intCurrencyTransactions = /*[[${intCurrencyTransactions}]]*/ [];
+    var intCurrency = /*[[${intCurrency}]]*/ [];
+    var intCurrencyCom = /*[[${intCurrencyCom}]]*/ [];
+</script>
+
+<script src="/js/stats.js"></script>
+</body>
+
+</html>

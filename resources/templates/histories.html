@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>История транзакций</title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body>
+
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page projects-page mt-3">
+    <section class="portfolio-block projects-cards">
+        <div class="container">
+            <div class="heading"><h2>История транзакций</h2></div>
+            <form th:if="${role == 'USER'}" method="get" action="/histories/search/user" class="mb-5" style="max-width: 100%">
+                <div class="row">
+                    <div class="col-2"><a href="/histories" class="btn btn-primary w-100" role="button">Все</a>
+                    </div>
+                    <div class="col">
+                        <select name="cardId" class="form-select" required>
+                            <option th:each="card : ${user.cards}" th:value="${card.id}" th:selected="${card.id == cardId}"
+                                    th:label="${card.name + ' - ' + card.number}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="date" class="form-control" name="date" th:value="${date}">
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary w-100" type="submit">Поиск</button>
+                    </div>
+                </div>
+            </form>
+            <form th:if="${role == 'MANAGER'}" method="get" action="/histories/search/man" class="mb-5" style="max-width: 100%">
+                <div class="row">
+                    <div class="col-2"><a href="/histories" class="btn btn-primary w-100" role="button">Все</a>
+                    </div>
+                    <div class="col">
+                        <select name="atmId" class="form-select" required>
+                            <option th:each="atm : ${atms}" th:value="${atm.id}" th:selected="${atm.id == atmId}"
+                                    th:label="${atm.name + ' - ' + atm.address}"></option>
+                        </select>
+                    </div>
+                    <div class="col">
+                        <input type="date" class="form-control" name="date" th:value="${date}">
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary w-100" type="submit">Поиск</button>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div th:each="h : ${histories}" class="col-4 mb-3">
+                    <div class="row">
+                        <div class="col-6 text-center" style="height: 150px">
+                            <img class="cards-img-top scale-on-hover rounded-5"
+                                 th:src="'/img/' + ${h.getATM.file}" style="max-width: 100%;max-height: 150px">
+                        </div>
+                        <div class="col-6">
+                            <h6 th:text="${h.getATM.name}"></h6>
+                            <span th:text="${'Адрес: ' + h.ATM.address}"></span>
+                            <br>
+                            <span th:text="${'Дата: ' + h.date}"></span>
+                            <br>
+                            <span th:if="${role == 'MANAGER'}" th:text="${'Пользователь: ' + h.owner.username}"></span>
+                            <br th:if="${role == 'MANAGER'}">
+                            <span th:text="${'Снято: ' + h.sum + ' ' + h.card.currency.name}"></span>
+                            <br>
+                            <span th:if="${role == 'USER'}" th:text="${h.card.name}"></span>
+                            <br th:if="${role == 'USER'}">
+                            <span th:if="${role == 'USER'}" th:text="${h.card.number}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+<div th:insert="blocks/scripts :: scripts"></div>
+
+</body>
+
+</html>

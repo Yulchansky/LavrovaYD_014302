@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Банкоматы</title>
+</head>
+
+<head th:insert="blocks/head :: head"></head>
+
+<body>
+
+<div th:insert="blocks/nav :: nav"></div>
+
+<main class="page projects-page mt-3">
+    <section class="portfolio-block projects-cards">
+        <div class="container">
+            <div class="heading">
+                <h2>Банкоматы</h2>
+            </div>
+            <form method="get" action="/search" class="mb-5" style="max-width: 100%">
+                <div class="row">
+                    <div class="col-2"><a href="/" class="btn btn-primary w-100" role="button">Все</a>
+                    </div>
+                    <div class="col">
+                        <input type="text" name="name" class="form-control" placeholder="Название" th:value="${name}">
+                    </div>
+                    <div class="col">
+                        <input type="text" name="serial" class="form-control" placeholder="Серийный номер"
+                               th:value="${serial}">
+                    </div>
+                    <div class="col-2">
+                        <button class="btn btn-primary w-100" type="submit">Поиск</button>
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div th:each="i : ${ATMs}" class="col-3">
+                    <div class="cards border-0">
+                        <div style="height: 250px" class="text-center">
+                            <a th:href="'/ATMs/' + ${i.id}">
+                                <img class="cards-img-top scale-on-hover rounded-5 mb-2"
+                                     style="max-width: 100%;max-height: 250px" th:src="'/img/' + ${i.file}">
+                            </a>
+                        </div>
+                        <div class="cards-body text-start">
+                            <h6 class="text-center">
+                                <a th:href="'/ATMs/' + ${i.id}" th:text="${i.name}"></a>
+                            </h6>
+                            <span class="text-success" th:if="${i.status}">Активен</span>
+                            <span class="text-danger" th:unless="${i.status}">Неактивен</span>
+                            <br>
+                            <span th:text="${'Комиссия: ' + i.com + '%'}">Комиссия</span>
+                            <br th:if="${i.BYN != 0}">
+                            <span class="text-primary" th:if="${i.BYN != 0}" th:text="${'BYN: ' + i.BYN}"></span>
+                            <br th:if="${i.USD != 0}">
+                            <span class="text-success" th:if="${i.USD != 0}" th:text="${'USD: ' + i.USD}"></span>
+                            <br th:if="${i.EUR != 0}">
+                            <span class="text-warning" th:if="${i.EUR != 0}" th:text="${'EUR: ' + i.EUR}"></span>
+                            <br th:if="${i.RUB != 0}">
+                            <span class="text-danger" th:if="${i.RUB != 0}" th:text="${'RUB: ' + i.RUB}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+
+<div th:insert="blocks/scripts :: scripts"></div>
+
+</body>
+
+</html>
